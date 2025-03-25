@@ -58,7 +58,7 @@ namespace CryptoExchange.Net.Converters.SystemTextJson
                     if (string.IsNullOrWhiteSpace(stringValue)
                         || stringValue == "-1"
                         || stringValue == "0001-01-01T00:00:00Z"
-                        || double.TryParse(stringValue, out var doubleVal) && doubleVal == 0)
+                        || double.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var doubleVal) && doubleVal == 0)
                     {
                         return default;
                     }

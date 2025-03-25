@@ -57,7 +57,7 @@ namespace CryptoExchange.Net.Converters.JsonNet
                 var stringValue = (string)reader.Value;
                 if (string.IsNullOrWhiteSpace(stringValue)
                     || stringValue == "-1"
-                    || (double.TryParse(stringValue, out var doubleVal) && doubleVal == 0))
+                    || (double.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var doubleVal) && doubleVal == 0))
                 {
                     return objectType == typeof(DateTime) ? default(DateTime) : null;
                 }

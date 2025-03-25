@@ -1,12 +1,9 @@
-﻿using CryptoExchange.Net.Attributes;
+﻿using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.Converters.SystemTextJson;
-using System.Text.Json;
 using NUnit.Framework;
 using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using NUnit.Framework.Legacy;
-using CryptoExchange.Net.Converters;
-using CryptoExchange.Net.Testing.Comparers;
 
 namespace CryptoExchange.Net.UnitTests
 {

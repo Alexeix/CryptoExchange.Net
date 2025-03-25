@@ -2,33 +2,51 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Binance.Net.Clients;
 using Bybit.Net.Clients;
 using ConsoleClient.Exchanges;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Objects.Sockets;
+using Kucoin.Net.Clients;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+
 
 namespace ConsoleClient
 {
     internal class Program
     {
+        static CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        static CancellationToken token = cancelTokenSource.Token;
+
         static Dictionary<string, IExchange> _exchanges = new Dictionary<string, IExchange>
         {
-            { "Binance", new BinanceExchange() },
+            { "Kucoin", new KucoinExchange(token) },
             { "Bybit", new BybitExchange() }
         };
 
         static async Task Main(string[] args)
         {
-            BinanceRestClient.SetDefaultOptions(options =>
+            // Build the configuration
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            var apiKey = configuration["AppSettings:ApiKey"];
+            var secret = configuration["AppSettings:Secret"];
+            var passPhrase = configuration["AppSettings:PassPhrase"];
+
+            KucoinRestClient.SetDefaultOptions(options =>
             {
-                options.ApiCredentials = new ApiCredentials("APIKEY", "APISECRET");
+                options.ApiCredentials = new Kucoin.Net.Objects.KucoinApiCredentials(apiKey, secret, passPhrase);
             });
-            BybitRestClient.SetDefaultOptions(options =>
-            {
-                options.ApiCredentials = new ApiCredentials("APIKEY", "APISECRET");
-            });
+            //BybitRestClient.SetDefaultOptions(options =>
+            //{
+            //    options.ApiCredentials = new ApiCredentials("APIKEY", "APISECRET");
+            //});
 
             while (true)
             {
